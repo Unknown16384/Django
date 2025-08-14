@@ -1,1 +1,1 @@
-# Введение в Django
+# Модели (models) в Django
