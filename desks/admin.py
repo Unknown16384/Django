@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Desks
 
-# Register your models here.
+@admin.register(Desks)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'description')
