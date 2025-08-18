@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+<a href="{% url 'users:' %}">на главную</a>
+<h3>Список</h3>
+{% include 'includes/user_cards.html' %}
+{% endblock %}

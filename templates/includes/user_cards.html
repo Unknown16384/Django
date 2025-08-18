@@ -1,0 +1,7 @@
+<ul>
+{% for user in users %}
+  <li><a href="{% url 'users:detail' user.id %}">
+    {{user.family}} {{ user.name }}. {{ user.skills.all|join:", " }}
+  </a></li>
+{% endfor %}
+</ul>

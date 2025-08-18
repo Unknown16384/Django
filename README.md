@@ -1,1 +1,1 @@
-# Модели (models) в Django
+# Представления (views) и шаблоны (templates) Django
