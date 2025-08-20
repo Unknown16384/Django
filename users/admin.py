@@ -12,7 +12,7 @@ class ImageInLine(admin.StackedInline):
 
 @admin.register(UserProfile)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'all_skills')
+    list_display = ('full_name', 'all_skills', 'user__desk__id')
     inlines = (SkillInLine, ImageInLine)
 
     def full_name(self, obj):

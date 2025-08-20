@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db.models import Max
+from datetime import date
 from django.db import models
 
 
@@ -10,16 +11,24 @@ class UserProfile(models.Model):
         2: 'женский',
     }
     user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True, related_name='profile')
-    gender = models.IntegerField('Пол', choices=GENDER_CHOICES, default=0)
+    gender = models.SmallIntegerField('Пол', choices=GENDER_CHOICES, default=0)
     family = models.CharField('Фамилия', max_length=30)
     name = models.CharField('Имя', max_length=30)
     surname = models.CharField('Отчество', max_length=30, blank=True)
     description = models.TextField('Описание', blank=True)
+    tester = models.BooleanField('Тестировщик', default=False)
+    date = models.DateField('Дата приема', default=date.today)
+
+    @property
+    def diff_date(self):
+        return (date.today() - self.date).days
 
     class Meta:
         verbose_name = 'Сотрудник'
         verbose_name_plural = 'Сотрудники'
 
+    def __str__(self):
+        return f'{self.family} {self.name}'
 
 class SkillList(models.Model):
     skill = models.CharField('Название', unique=True)
@@ -34,7 +43,7 @@ class SkillList(models.Model):
 class Skills(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name='Сотрудник', related_name='skills')
     skill = models.ForeignKey(SkillList, on_delete=models.CASCADE, verbose_name='Навык', related_name='users')
-    level = models.IntegerField('Уровень освоения', choices=[(a, a) for a in range(1, 11)])
+    level = models.SmallIntegerField('Уровень освоения', choices=[(a, a) for a in range(1, 11)])
 
     class Meta:
         verbose_name = 'Навык'
@@ -45,10 +54,11 @@ class Skills(models.Model):
 
 class Gallery(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name='Сотрудник', related_name='gallery')
-    image = models.ImageField()
-    position = models.IntegerField(default=0)
+    image = models.ImageField('Изображение')
+    position = models.PositiveSmallIntegerField('Позиция', default=0)
 
     class Meta:
+        ordering = ['position',]
         verbose_name = 'Изображение'
         verbose_name_plural = 'Галерея'
 
