@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
 
+
 class Desks(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Сотрудник', unique=True, related_name='desk')
     number = models.PositiveSmallIntegerField('Номер стола', unique=True)

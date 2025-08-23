@@ -8,7 +8,7 @@ def index(request):
     context = {
         'title': 'Главная страница',
         'count': UserProfile.objects.count(),
-        'users': UserProfile.objects.all().prefetch_related('skills', 'skills__skill', 'gallery').order_by('-date')[:4],
+        'users': UserProfile.objects.all().prefetch_related('skills', 'skills__skill', 'gallery')[:4],
     }
     return render(request, 'users/index.html', context)
 

@@ -24,6 +24,7 @@ class UserProfile(models.Model):
         return (date.today() - self.date).days
 
     class Meta:
+        ordering = ['-date',]
         verbose_name = 'Сотрудник'
         verbose_name_plural = 'Сотрудники'
 
