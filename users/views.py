@@ -21,7 +21,7 @@ def user_list(request):
 
 @login_required
 def user_detail(request, id):
-    user = UserProfile.objects.prefetch_related('skills', 'skills__skill', 'gallery').select_related('user__desk').get(id=id)
+    user = UserProfile.objects.prefetch_related('skills', 'skills__skill', 'gallery').select_related('desk').get(id=id)
     context = {
         'title': f'{user.name} {user.family}',
         'user': user,

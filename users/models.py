@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db.models import Max
 from datetime import date
 from django.db import models
@@ -31,6 +32,15 @@ class UserProfile(models.Model):
     def __str__(self):
         return f'{self.family} {self.name}'
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if not Desks.objects.filter(user_id=self.id).exists():
+            Desks.objects.create(user_id=self.id)
+
+    def delete(self, *args, **kwargs):
+        self.user.delete()
+        super().delete(*args, **kwargs)
+
 class SkillList(models.Model):
     skill = models.CharField('Название', unique=True)
 
@@ -39,7 +49,7 @@ class SkillList(models.Model):
         verbose_name_plural = 'Список навыков'
 
     def __str__(self):
-        return self.skill
+        return f'{self.skill}'
 
 class Skills(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name='Сотрудник', related_name='skills')
@@ -52,6 +62,33 @@ class Skills(models.Model):
 
     def __str__(self):
         return f'{self.skill}: {self.level}'
+
+class Desks(models.Model):
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, verbose_name='Сотрудник', related_name='desk')
+    number = models.PositiveSmallIntegerField('Номер стола', blank=True, null=True)
+    description = models.TextField('Описание', blank=True)
+
+    class Meta:
+        verbose_name = 'Стол'
+        verbose_name_plural = 'Столы'
+
+    def __str__(self):
+        return f'{self.number}: {self.user}'
+
+    def clean(self):
+        if self.number:
+            this_desk = Desks.objects.filter(number=self.number).exclude(user=self.user).first()
+            if this_desk and this_desk.number == self.number:
+                raise ValidationError('Это место уже занято.')
+            current_user = self.user.tester
+            neigh1 = Desks.objects.filter(number=self.number - 1).first()
+            neigh2 = Desks.objects.filter(number=self.number + 1).first()
+            if neigh1:
+                if neigh1.user.tester != current_user:
+                    raise ValidationError('Тестировщики и разработчики не должны сидеть за соседними столами.')
+            if neigh2:
+                if neigh2.user.tester != current_user:
+                    raise ValidationError('Тестировщики и разработчики не должны сидеть за соседними столами.')
 
 class Gallery(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name='Сотрудник', related_name='gallery')

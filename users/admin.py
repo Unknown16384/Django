@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import UserProfile, Skills, SkillList, Gallery
+from .models import UserProfile, Skills, SkillList, Gallery, Desks
 
 class SkillInLine(admin.StackedInline):
     model = Skills
@@ -12,7 +12,7 @@ class ImageInLine(admin.StackedInline):
 
 @admin.register(UserProfile)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'all_skills', 'user__desk__id')
+    list_display = ('full_name', 'all_skills', 'desk__number')
     inlines = (SkillInLine, ImageInLine)
 
     def full_name(self, obj):
@@ -23,3 +23,4 @@ class UserAdmin(admin.ModelAdmin):
     all_skills.short_description = 'Навыки'
 
 admin.site.register(SkillList)
+admin.site.register(Desks)

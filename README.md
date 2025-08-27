@@ -1,1 +1,1 @@
-# Тестирование
+# Django REST Framework

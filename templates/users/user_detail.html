@@ -8,7 +8,7 @@
         <li>{{ skill.skill }}: {{ skill.level }}</li>
     {% endfor %}
 </ul>
-Стаж работы: {{ user.diff_date }}.{% if user.user.desk %} Номер стола: {{ user.user.desk.id }}{% endif %}
+Стаж работы: {{ user.diff_date }}.{% if user.desk.number %} Номер стола: {{ user.desk.number }}{% endif %}
 <hr>
 {% for image in user.gallery.all|slice:'1:' %}
     <img src="{{ image.image.url }}">
