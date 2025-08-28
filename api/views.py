@@ -29,10 +29,11 @@ class UserDesk(generics.RetrieveUpdateAPIView):
 class AdminList(generics.ListCreateAPIView):
     queryset = User.objects.all().select_related('profile', 'profile__desk').prefetch_related('profile__skills', 'profile__skills__skill')
     serializer_class = AdminListSerializer
-#    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser]
 
 class AdminDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = UserProfile.objects.prefetch_related('skills', 'skills__skill').select_related('desk', 'user')
     serializer_class = AdminDetailSerializer
     lookup_field = 'id'
-#    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser]
+
